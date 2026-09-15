@@ -2,7 +2,6 @@ const { beforeEach, test } = require('node:test');
 const assert = require('node:assert');
 const documentService = require('../src/services/documentService');
 const documentRepository = require('../src/repositories/documentRepository');
-const { resolveStorageFilePath } = require('../src/repositories/uploadStorage');
 
 beforeEach(() => {
   documentRepository.clear();
@@ -60,7 +59,7 @@ test('listDocuments filtra por owner sem duplicar transformação de saída', ()
   });
 });
 
-test('getDocumentFile delega a resolução do caminho e retorna null quando não encontra', () => {
+test('getDocumentFile retorna o identificador armazenado e null quando não encontra', () => {
   documentService.registerUpload({
     file: {
       filename: 'stored-file.pdf',
@@ -71,10 +70,9 @@ test('getDocumentFile delega a resolução do caminho e retorna null quando não
   });
 
   const documentFile = documentService.getDocumentFile('stored-file.pdf');
-
   assert.deepStrictEqual(documentFile, {
     storageName: 'stored-file.pdf',
-    filePath: resolveStorageFilePath('stored-file.pdf'),
+    storageName: 'stored-file.pdf',
     originalName: 'contrato.pdf',
   });
   assert.strictEqual(documentService.getDocumentFile('missing'), null);

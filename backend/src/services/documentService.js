@@ -1,6 +1,5 @@
 // Regras de negócio para upload, listagem e download de documentos.
 const documentRepository = require('../repositories/documentRepository');
-const { resolveStorageFilePath } = require('../repositories/uploadStorage');
 
 function toPublicMetadata(document) {
   const { id, originalName, size, uploadedAt, owner } = document;
@@ -20,7 +19,6 @@ function createDocumentRecord(file, owner) {
 function toDownloadTarget(document) {
   return {
     storageName: document.id,
-    filePath: resolveStorageFilePath(document.id),
     originalName: document.originalName,
   };
 }

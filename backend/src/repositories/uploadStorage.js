@@ -20,9 +20,4 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-
-function resolveStorageFilePath(fileName) {
-  return path.join(STORAGE_DIR, fileName);
-}
-
-module.exports = { upload, STORAGE_DIR, resolveStorageFilePath };
+module.exports = { upload, STORAGE_DIR };
