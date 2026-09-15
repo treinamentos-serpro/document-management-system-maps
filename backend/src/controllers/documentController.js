@@ -34,9 +34,12 @@ function downloadDocument(req, res, next) {
       }
 
       if (error.code === 'ENOENT') {
-        if (!res.headersSent) {
-          res.status(404).json({ erro: 'Documento não encontrado.' });
+        if (res.headersSent) {
+          next(error);
+          return;
         }
+
+        res.status(404).json({ erro: 'Documento não encontrado.' });
         return;
       }
 

@@ -61,3 +61,29 @@ test('downloadDocument retorna 404 quando o arquivo não existe mais no disco', 
   assert.strictEqual(responseStatus, 404);
   assert.deepStrictEqual(responseBody, { erro: 'Documento não encontrado.' });
 });
+
+test('downloadDocument encaminha ENOENT quando os cabeçalhos já foram enviados', () => {
+  documentService.getDocumentFile = () => ({
+    storageName: 'stored-file.pdf',
+    originalName: 'contrato.pdf',
+  });
+
+  let forwardedError;
+  const expectedError = { code: 'ENOENT' };
+  const res = {
+    headersSent: true,
+    download(storageName, originalName, options, callback) {
+      callback(expectedError);
+    },
+  };
+
+  documentController.downloadDocument(
+    { params: { id: 'stored-file.pdf' } },
+    res,
+    (error) => {
+      forwardedError = error;
+    }
+  );
+
+  assert.strictEqual(forwardedError, expectedError);
+});
