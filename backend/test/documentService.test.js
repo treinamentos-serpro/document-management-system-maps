@@ -72,7 +72,6 @@ test('getDocumentFile retorna o identificador armazenado e null quando não enco
   const documentFile = documentService.getDocumentFile('stored-file.pdf');
   assert.deepStrictEqual(documentFile, {
     storageName: 'stored-file.pdf',
-    storageName: 'stored-file.pdf',
     originalName: 'contrato.pdf',
   });
   assert.strictEqual(documentService.getDocumentFile('missing'), null);
