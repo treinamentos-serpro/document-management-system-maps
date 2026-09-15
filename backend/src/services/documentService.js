@@ -19,6 +19,7 @@ function createDocumentRecord(file, owner) {
 
 function toDownloadTarget(document) {
   return {
+    storageName: document.id,
     filePath: resolveStorageFilePath(document.id),
     originalName: document.originalName,
   };

@@ -1,5 +1,5 @@
 // Tratamento de entrada/saída HTTP e validações básicas dos endpoints de documentos.
-const fs = require('fs');
+const { STORAGE_DIR } = require('../repositories/uploadStorage');
 const documentService = require('../services/documentService');
 
 function uploadDocument(req, res) {
@@ -17,13 +17,32 @@ function listDocuments(req, res) {
   return res.status(200).json(documents);
 }
 
-function downloadDocument(req, res) {
+function downloadDocument(req, res, next) {
   const { id } = req.params;
   const documentFile = documentService.getDocumentFile(id);
-  if (!documentFile || !fs.existsSync(documentFile.filePath)) {
+  if (!documentFile) {
     return res.status(404).json({ erro: 'Documento não encontrado.' });
   }
-  return res.download(documentFile.filePath, documentFile.originalName);
+
+  return res.download(
+    documentFile.storageName,
+    documentFile.originalName,
+    { root: STORAGE_DIR },
+    (error) => {
+      if (!error) {
+        return;
+      }
+
+      if (error.code === 'ENOENT') {
+        if (!res.headersSent) {
+          res.status(404).json({ erro: 'Documento não encontrado.' });
+        }
+        return;
+      }
+
+      next(error);
+    }
+  );
 }
 
 module.exports = { uploadDocument, listDocuments, downloadDocument };

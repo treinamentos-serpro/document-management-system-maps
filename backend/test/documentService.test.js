@@ -73,6 +73,7 @@ test('getDocumentFile delega a resolução do caminho e retorna null quando não
   const documentFile = documentService.getDocumentFile('stored-file.pdf');
 
   assert.deepStrictEqual(documentFile, {
+    storageName: 'stored-file.pdf',
     filePath: resolveStorageFilePath('stored-file.pdf'),
     originalName: 'contrato.pdf',
   });

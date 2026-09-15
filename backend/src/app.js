@@ -28,7 +28,11 @@ app.use(documentRoutes);
 // Tratamento de erros nos limites do sistema (ex.: falha do multer ao gravar em disco).
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  console.error(err);
+  if (process.env.NODE_ENV !== 'production') {
+    console.error(err);
+  } else {
+    console.error('Erro interno ao processar a requisição.');
+  }
   res.status(500).json({ erro: 'Erro interno ao processar a requisição.' });
 });
 
