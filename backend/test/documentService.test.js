@@ -1,8 +1,8 @@
 const { beforeEach, test } = require('node:test');
 const assert = require('node:assert');
-const path = require('path');
 const documentService = require('../src/services/documentService');
 const documentRepository = require('../src/repositories/documentRepository');
+const { resolveStorageFilePath } = require('../src/repositories/uploadStorage');
 
 beforeEach(() => {
   documentRepository.clear();
@@ -73,10 +73,7 @@ test('getDocumentFile delega a resolução do caminho e retorna null quando não
   const documentFile = documentService.getDocumentFile('stored-file.pdf');
 
   assert.deepStrictEqual(documentFile, {
-    filePath: path.join(
-      '/home/runner/work/document-management-system-maps/document-management-system-maps/backend/storage',
-      'stored-file.pdf'
-    ),
+    filePath: resolveStorageFilePath('stored-file.pdf'),
     originalName: 'contrato.pdf',
   });
   assert.strictEqual(documentService.getDocumentFile('missing'), null);
